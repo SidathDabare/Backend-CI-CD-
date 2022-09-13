@@ -1,11 +1,12 @@
 /** @format */
 
 import express from "express"
-import listEndpoints from "express-list-endpoints"
+// import listEndpoints from "express-list-endpoints"
 import cors from "cors"
-import mongoose from "mongoose"
+// import mongoose from "mongoose"
 
 import {
+  badRequestErrorHandler,
   badRequestHandler,
   genericErrorHandler,
   notFoundHandler,
@@ -23,18 +24,22 @@ server.use(express.json())
 
 server.use("/posts", blogPostsRouter)
 server.use("/users", usersRouter)
-
+server.use("/test", (req, res, next) => {
+  res.send({ hello: "world" })
+})
+server.use(badRequestErrorHandler)
 server.use(unauthorizedErrorHandler)
 server.use(badRequestHandler)
 server.use(notFoundHandler)
 server.use(genericErrorHandler)
 
-mongoose.connect(process.env.MONGO_CONNECTION_URL)
+// mongoose.connect(process.env.MONGO_CONNECTION_URL)
 
-mongoose.connection.on("connected", () => {
-  console.log("Successfully connected to MongoDB!")
-  server.listen(port, () => {
-    console.table(listEndpoints(server))
-    console.log(`Server is running on port ${port}`)
-  })
-})
+// mongoose.connection.on("connected", () => {
+//   console.log("Successfully connected to MongoDB!")
+//   server.listen(port, () => {
+//     console.table(listEndpoints(server))
+//     console.log(`Server is running on port ${port}`)
+//   })
+// })
+export default server
